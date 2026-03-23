@@ -1,10 +1,10 @@
-# nestjs-skills
+# nestjs-master-skills
 
 > Comprehensive NestJS Claude Code skill suite — production-ready patterns, best practices, and full API coverage for every NestJS feature.
 
 ## What is this?
 
-`nestjs-skills` is a drop-in skill suite for [Claude Code](https://claude.ai/code) that transforms Claude into a senior NestJS developer. It covers every major NestJS feature with production-ready patterns and best practices, extracted from the official documentation.
+`nestjs-master-skills` is a drop-in skill suite for [Claude Code](https://claude.ai/code) that transforms Claude into a senior NestJS developer. It covers every major NestJS feature with production-ready patterns and best practices, extracted from the official documentation.
 
 ## Skills Included
 
@@ -32,10 +32,10 @@
 
 ```bash
 # Install globally
-npm install -g nestjs-skills
+npm install -g nestjs-master-skills
 
 # Or use via npx (no install needed)
-npx nestjs-skills init
+npx nestjs-master-skills init
 ```
 
 That's it! Restart Claude Code and the skills are active.
@@ -44,24 +44,24 @@ That's it! Restart Claude Code and the skills are active.
 
 ```bash
 # Initialize skills (copies to .claude/skills/nestjs/)
-npx nestjs-skills init
+npx nestjs-master-skills init
 
 # Overwrite existing skills
-npx nestjs-skills init --force
+npx nestjs-master-skills init --force
 
 # Initialize in a custom directory
-npx nestjs-skills init ./path/to/.claude/skills
+npx nestjs-master-skills init ./path/to/.claude/skills
 
 # List all available skills
-npx nestjs-skills list
+npx nestjs-master-skills list
 
 # Show help
-npx nestjs-skills --help
+npx nestjs-master-skills --help
 ```
 
 ## What You'll Get
 
-After running `nestjs-skills init`, your project will have:
+After running `nestjs-master-skills init`, your project will have:
 
 ```
 .claude/skills/nestjs/
@@ -88,7 +88,7 @@ After running `nestjs-skills init`, your project will have:
 ## File Structure
 
 ```
-nestjs-skills/
+nestjs-master-skills/
 ├── bin/
 │   └── cli.js           # CLI: init, list commands
 ├── skills/

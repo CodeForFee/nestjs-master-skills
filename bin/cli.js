@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * nestjs-skills CLI
- * Usage: npx nestjs-skills init
- *        npx nestjs-skills init --target ./.claude/skills
+ * nestjs-master-skills CLI
+ * Usage: npx nestjs-master-skills init
+ *        npx nestjs-master-skills init --target ./.claude/skills
  */
 
 const fs = require('fs');
@@ -47,7 +47,7 @@ function error(text) {
 }
 
 function header(text) {
-  console.log(`\n  ${green(text)}\n`);
+  console.log(`\n  ${green('[nestjs-master-skills]')} ${text}\n`);
 }
 
 function copyFile(src, dest) {
@@ -69,7 +69,7 @@ function copyDir(src, dest) {
 }
 
 function listSkills() {
-  header('nestjs-skills — available skills');
+  header('available skills');
 
   const skills = fs.readdirSync(SKILLS_SOURCE)
     .filter(f => f.endsWith('.md'))
@@ -90,7 +90,7 @@ function listSkills() {
 function init(targetDir) {
   const dest = targetDir || SKILLS_DEST;
 
-  header('nestjs-skills init');
+  header('initializing');
 
   info(`Source:     ${SKILLS_SOURCE}`);
   info(`Target:     ${dest}`);
@@ -126,23 +126,23 @@ function init(targetDir) {
   console.log('  Next steps:');
   info('  1. Restart Claude Code to load the new skills');
   info('  2. Skills are available in: .claude/skills/nestjs/');
-  info('  3. Run: npx nestjs-skills list  — to see all available skills');
+  info('  3. Run: npx nestjs-master-skills list  — to see all available skills');
   console.log();
 }
 
 function help() {
-  header('nestjs-skills — CLI');
+  header('CLI');
   info('A comprehensive NestJS skill suite for Claude Code\n');
   console.log('  Usage:');
-  info('    npx nestjs-skills init              Initialize skills in .claude/skills/nestjs/');
-  info('    npx nestjs-skills init --force      Overwrite existing skills');
-  info('    npx nestjs-skills init ./path       Initialize in custom directory');
-  info('    npx nestjs-skills list              List all available skills');
-  info('    npx nestjs-skills --help            Show this help\n');
+  info('    npx nestjs-master-skills init              Initialize skills in .claude/skills/nestjs/');
+  info('    npx nestjs-master-skills init --force      Overwrite existing skills');
+  info('    npx nestjs-master-skills init ./path       Initialize in custom directory');
+  info('    npx nestjs-master-skills list              List all available skills');
+  info('    npx nestjs-master-skills --help            Show this help\n');
   console.log('  Examples:');
-  info('    npx nestjs-skills init');
-  info('    npx nestjs-skills init --force');
-  info('    npx nestjs-skills init ./some/path/.claude/skills');
+  info('    npx nestjs-master-skills init');
+  info('    npx nestjs-master-skills init --force');
+  info('    npx nestjs-master-skills init ./some/path/.claude/skills');
   console.log();
 }
 

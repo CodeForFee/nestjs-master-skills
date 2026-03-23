@@ -27,16 +27,14 @@
     "LICENSE"
   ],
   "bin": {
-    "nestjs-skills": "./bin/cli.js"
+    "nestjs-master-skills": "bin/cli.js"
   },
-  "scripts": {
-    "prepublishOnly": "node -e \"if(process.env.npm_config_argv && JSON.parse(process.env.npm_config_argv).includes('--dry-run')){console.log('dry-run ok')}else{process.exit(0)}\" || true"
-  },
+  "scripts": {},
   "engines": {
     "node": ">=18.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CodeForFee/nestjs-master-skills.git"
+    "url": "git+https://github.com/CodeForFee/nestjs-master-skills.git"
   }
 }
