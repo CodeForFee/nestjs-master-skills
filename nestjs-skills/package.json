@@ -1,0 +1,42 @@
+{
+  "name": "nestjs-master-skills",
+  "version": "1.0.0",
+  "description": "Comprehensive NestJS Claude Code skill suite — production-ready patterns, best practices, and full API coverage",
+  "keywords": [
+    "nestjs",
+    "claude",
+    "claude-code",
+    "skill",
+    "nestjs-skills",
+    "nest-framework",
+    "typescript"
+  ],
+  "homepage": "https://github.com/CodeForFee/nestjs-master-skills",
+  "bugs": {
+    "url": "https://github.com/CodeForFee/nestjs-master-skills/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "CodeForFee",
+    "email": "dienhoanguyen11@gmail.com"
+  },
+  "files": [
+    "skills/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "nestjs-skills": "./bin/cli.js"
+  },
+  "scripts": {
+    "prepublishOnly": "node -e \"if(process.env.npm_config_argv && JSON.parse(process.env.npm_config_argv).includes('--dry-run')){console.log('dry-run ok')}else{process.exit(0)}\" || true"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeForFee/nestjs-master-skills.git"
+  }
+}
