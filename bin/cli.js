@@ -2,8 +2,6 @@
 
 /**
  * nestjs-master-skills CLI
- * Usage: npx nestjs-master-skills init
- *        npx nestjs-master-skills init --target ./.claude/skills
  */
 
 const fs = require('fs');
@@ -13,63 +11,52 @@ const SKILLS_SOURCE = path.join(__dirname, '..', 'skills');
 const SKILLS_DEST = path.join(process.cwd(), '.claude', 'skills', 'nestjs');
 const SKILL_INDEX = path.join(process.cwd(), '.claude', 'skills', 'nestjs', 'SKILL.md');
 
+// Màu sắc đặc trưng của NestJS
+const RED = '\x1b[31m';
+const WHITE = '\x1b[37m';
+const BOLD = '\x1b[1m';
+const RESET = '\x1b[0m';
+const GREEN = '\x1b[32m';
+const YELLOW = '\x1b[33m';
+
 const COMMANDS = {
   init: 'init',
   list: 'list',
 };
 
-function green(text) {
-  return `\x1b[32m${text}\x1b[0m`;
+// Logo ASCII NestJS
+const NEST_LOGO = `
+${RED}            _                 _  ${WHITE}     _ 
+${RED}  _ __  ___| |_ __ _ ___    | |${WHITE} ___| |
+${RED} | '_ \\/ _ \\ __/ _\` / __|${WHITE} _ | |/ __| |
+${RED} | | | \\  __/ |_| (_| \\__ \\${WHITE}| |_| \\__ \\ |
+${RED} |_| |_|\\___|\\__\\__,_|___/${WHITE} \\___/|___/_|
+${RESET}`;
+
+function printLogo() {
+  console.log(NEST_LOGO);
+  console.log(`  ${BOLD}${RED}NESTJS${RESET} ${WHITE}MASTER SKILLS CLI${RESET}\n`);
 }
 
-function yellow(text) {
-  return `\x1b[33m${text}\x1b[0m`;
-}
-
-function red(text) {
-  return `\x1b[31m${text}\x1b[0m`;
-}
-
-function info(text) {
-  console.log(`  ${text}`);
-}
-
-function success(text) {
-  console.log(`  ${green('✓')} ${text}`);
-}
-
-function warn(text) {
-  console.log(`  ${yellow('⚠')} ${text}`);
-}
-
-function error(text) {
-  console.error(`  ${red('✗')} ${text}`);
-}
+function info(text) { console.log(`  ${text}`); }
+function success(text) { console.log(`  ${GREEN}✓${RESET} ${text}`); }
+function warn(text) { console.log(`  ${YELLOW}⚠${RESET} ${text}`); }
+function error(text) { console.error(`  ${RED}✗${RESET} ${text}`); }
 
 function header(text) {
-  console.log(`\n  ${green('[nestjs-master-skills]')} ${text}\n`);
+  console.log(`  ${RED}»${RESET} ${BOLD}${text.toUpperCase()}${RESET}\n`);
 }
 
-function copyFile(src, dest) {
-  fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.copyFileSync(src, dest);
-}
-
-function copyDir(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  for (const file of fs.readdirSync(src)) {
-    const srcFile = path.join(src, file);
-    const destFile = path.join(dest, file);
-    if (fs.statSync(srcFile).isDirectory()) {
-      copyDir(srcFile, destFile);
-    } else {
-      fs.copyFileSync(srcFile, destFile);
-    }
-  }
-}
+// ... (giữ nguyên các hàm copyFile, copyDir như cũ)
 
 function listSkills() {
-  header('available skills');
+  printLogo();
+  header('Available Skills');
+
+  if (!fs.existsSync(SKILLS_SOURCE)) {
+    error('Source skills directory not found.');
+    return;
+  }
 
   const skills = fs.readdirSync(SKILLS_SOURCE)
     .filter(f => f.endsWith('.md'))
@@ -77,102 +64,75 @@ function listSkills() {
 
   for (const skill of skills) {
     const skillPath = path.join(SKILLS_SOURCE, skill);
-    // Read description from frontmatter
     const content = fs.readFileSync(skillPath, 'utf8');
     const match = content.match(/description:\s*>\s*([^\n]+)/);
-    const desc = match ? match[1].trim().substring(0, 70) + '...' : 'No description';
-    info(`${green(skill.replace('.md', ''))}  ${yellow(desc)}`);
+    const desc = match ? match[1].trim().substring(0, 60) + '...' : 'NestJS expert capability';
+    
+    console.log(`  ${RED}●${RESET} ${BOLD}${skill.replace('.md', '').padEnd(20)}${RESET} ${desc}`);
   }
-
   console.log();
 }
 
 function init(targetDir) {
   const dest = targetDir || SKILLS_DEST;
+  printLogo();
+  header('Initializing Skills');
 
-  header('initializing');
+  info(`${BOLD}Source:${RESET} ${SKILLS_SOURCE}`);
+  info(`${BOLD}Target:${RESET} ${dest}\n`);
 
-  info(`Source:     ${SKILLS_SOURCE}`);
-  info(`Target:     ${dest}`);
-  console.log();
-
-  // Check if already initialized
   if (fs.existsSync(SKILL_INDEX) && !process.argv.includes('--force')) {
-    warn('Skills already exist at destination.');
-    warn('Run with --force to overwrite existing skills.');
-    console.log();
+    warn('Skills already exist. Use --force to overwrite.');
     return;
   }
 
-  // Create destination directory
   fs.mkdirSync(dest, { recursive: true });
-
-  // Copy all skill files
   const skills = fs.readdirSync(SKILLS_SOURCE).filter(f => f.endsWith('.md'));
 
-  for (const skill of skills) {
-    const src = path.join(SKILLS_SOURCE, skill);
-    const destFile = path.join(dest, skill);
+  skills.forEach(skill => {
     try {
-      copyFile(src, destFile);
-      success(`Copied: ${skill}`);
+      const src = path.join(SKILLS_SOURCE, skill);
+      const destFile = path.join(dest, skill);
+      fs.mkdirSync(path.dirname(destFile), { recursive: true });
+      fs.copyFileSync(src, destFile);
+      success(`Deployed: ${skill}`);
     } catch (err) {
-      error(`Failed to copy ${skill}: ${err.message}`);
+      error(`Failed: ${skill} (${err.message})`);
     }
-  }
+  });
 
-  console.log();
-  header(`Initialized! ${skills.length} skill files copied.`);
-  console.log('  Next steps:');
-  info('  1. Restart Claude Code to load the new skills');
-  info('  2. Skills are available in: .claude/skills/nestjs/');
-  info('  3. Run: npx nestjs-master-skills list  — to see all available skills');
-  console.log();
+  console.log(`\n  ${GREEN}${BOLD}Successfully initialized ${skills.length} skills!${RESET}`);
+  info('1. Restart Claude Code to sync.');
+  info(`2. Location: ${dest}\n`);
 }
 
 function help() {
-  header('CLI');
-  info('A comprehensive NestJS skill suite for Claude Code\n');
-  console.log('  Usage:');
-  info('    npx nestjs-master-skills init              Initialize skills in .claude/skills/nestjs/');
-  info('    npx nestjs-master-skills init --force      Overwrite existing skills');
-  info('    npx nestjs-master-skills init ./path       Initialize in custom directory');
-  info('    npx nestjs-master-skills list              List all available skills');
-  info('    npx nestjs-master-skills --help            Show this help\n');
-  console.log('  Examples:');
-  info('    npx nestjs-master-skills init');
-  info('    npx nestjs-master-skills init --force');
-  info('    npx nestjs-master-skills init ./some/path/.claude/skills');
-  console.log();
+  printLogo();
+  header('CLI Usage');
+  info(`${BOLD}npx nestjs-master-skills init${RESET}      Setup skills`);
+  info(`${BOLD}npx nestjs-master-skills list${RESET}      View all skills`);
+  info(`${BOLD}npx nestjs-master-skills --help${RESET}   Show this menu\n`);
 }
 
-// Main entry
 function main() {
   const args = process.argv.slice(2);
   const cmd = args.find(a => !a.startsWith('--'));
   const flags = args.filter(a => a.startsWith('--'));
 
-  if (flags.includes('--help') || flags.includes('-h')) {
+  if (flags.includes('--help') || flags.includes('-h') || args.length === 0) {
     help();
     return;
   }
 
   if (cmd === COMMANDS.list) {
     listSkills();
-    return;
-  }
-
-  if (cmd === COMMANDS.init || args.includes('--init')) {
+  } else if (cmd === COMMANDS.init) {
     const targetFlag = args.find(a => a.startsWith('--target='));
-    const targetDir = targetFlag
-      ? path.resolve(targetFlag.split('=')[1])
-      : null;
+    const targetDir = targetFlag ? path.resolve(targetFlag.split('=')[1]) : null;
     init(targetDir);
-    return;
+  } else {
+    help();
   }
-
-  // Default: show help
-  help();
 }
 
 main();
